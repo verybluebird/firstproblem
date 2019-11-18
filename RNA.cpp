@@ -1,9 +1,14 @@
+//
+// Created by juliyazatolockaya on 18.11.2019.
+//
+
+#include "RNA.h"
 #include <cstddef>
 #include <cassert>
 #include <iostream>
 #include <algorithm>
 #include <unordered_map>
-#include "RNA.h"
+
 #include <chrono>
 
 using namespace std;
@@ -31,19 +36,19 @@ size_t RNA::reference:: change_block(size_t index_of_block, Nucleotid n, size_t 
     //out(ed_L);
     // cout << "mask1" << "\n";
     size_t mask1 = B | ed_L | ed_R;
-    // out(mask1);
+    //out(mask1);
     size_t block = rna->rnaarr[index_of_block];
     block = rna->rnaarr[index_of_block] & mask1;
     size_t shift = 2 * (sizeof(size_t) * 4 - index - 1);
     size_t new_nucl = n;
     //cout<<"oldnucl\n";
-    // out(n);
+    //out(n);
     //cout<<"newnucl\n";
     new_nucl = new_nucl << shift;
     //out(new_nucl);
     block = block | new_nucl;
-    // cout<<"block\n";
-    // out (block);
+     //cout<<"block\n";
+     //out (block);
     return block;
 }
 
@@ -136,10 +141,10 @@ RNA::reference:: operator Nucleotid() {
 }
 
 void RNA::reference::out(size_t n) {
-        for (int i = sizeof(size_t) * 8 - 1; i > 0; --i) // short 16 бит (00000000 00000000)
-            cout << (n >> i & 1); // проходимся по битам и выводим через пробел
-        cout << (n & 1) << " \n";
-    }
+    for (int i = sizeof(size_t) * 8 - 1; i > 0; --i) // short 16 бит (00000000 00000000)
+        cout << (n >> i & 1); // проходимся по битам и выводим через пробел
+    cout << (n & 1) << " \n";
+}
 
 size_t RNA::reference::get_mask(size_t index) {
     size_t mask = T;
@@ -165,22 +170,23 @@ RNA::RNA(size_t num, Nucleotid n) {
     size_t nucl = n;
     assert(num >= 0);
     if (num > 0) {
-        this->NuclNum = num;
-        this->length = (num + 4 * sizeof(size_t) - 1) / (4 * sizeof(size_t));
-        this->rnaarr = new size_t[length]; //memory allocation
+        this->NuclNum = 0;
+        this->length = 0;
+        this->rnaarr = nullptr;
 
         for (size_t i = 0; i < num; i++) {
             nucl = n;
-            size_t index_of_changing_block = (i) / (sizeof(size_t) * 4);
+            reference(this,i)=n;
+            /*size_t index_of_changing_block = (i) / (sizeof(size_t) * 4);
             size_t index_of_nucl_in_block = i % (sizeof(size_t) * 4);
             size_t shift = 2 * (sizeof(size_t) * 4 - index_of_nucl_in_block - 1);
             nucl = nucl << shift;
-            *(this->rnaarr + index_of_changing_block) = *(this->rnaarr + index_of_changing_block) | nucl;
+            *(this->rnaarr + index_of_changing_block) = *(this->rnaarr + index_of_changing_block) | nucl;*/
 
         }
     } else {
-        this->NuclNum = num;
-        this->length = num;
+        this->NuclNum = 0;
+        this->length = 0;
         this->rnaarr = nullptr;
     }
 }
@@ -258,12 +264,14 @@ RNA RNA::operator+(RNA &r2) {
 
     size_t new_number_of_nucles = r2.NuclNum + this->NuclNum;
     size_t new_length = (r2.NuclNum + this->NuclNum + 4 * sizeof(size_t) - 1) / (4 * sizeof(size_t));
-    RNA new_rna(new_number_of_nucles, new_length);
+    RNA new_rna(this->NuclNum, this->length);
     for (size_t i = 0; i < this->length; i++) { //copy data first rna
         new_rna.rnaarr[i] = this->rnaarr[i];
     }
+
     for (size_t i = this->NuclNum; i < new_number_of_nucles; i++) { //copy data
-        reference(&new_rna, i) = Nucleotid(reference(&r2, i - this->NuclNum));
+        new_rna[i] = Nucleotid(r2[i-this->NuclNum]);
+
     }
 
     return new_rna;
@@ -369,13 +377,4 @@ size_t RNA::getlength() const {
 size_t RNA::capacity() const {
     return this->NuclNum;
 }
-
-
-
-
-
-
-
-// Created by Юлия Затолоцкая on 17.11.2019.
-//
 
