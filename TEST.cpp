@@ -1,322 +1,232 @@
 #include <cstdio>
-#include"Header.h"
+#include"RNA.h"
+#include "gtest/gtest.h"
 
 
 //test constructors
 
- TEST(f, TefstName) {
 
-}
-TEST(TestInit, TestName) {
+TEST(RNA, TestRNAConstructor) {
+    Nucleotid n = C;
+    RNA rn(1000, n);
+    RNA rn2;
+    bool tmp = true;
+    for (size_t i = 0;i<rn.capacity();i++) {
+        if (Nucleotid (rn[i]) != n) {
+        tmp = false;
+        break;
+        }
+    }
 
-}
-TEST(TestInit, TestRNAConstructor) {
-	Nucleotid n = C;
-	const RNA rn(1000, n);
-	RNA rn2;
-	bool tmp = true;
-	for (size_t i = 0; i < rn.length(); i++) {
-		if (rn[i] != n) {
-			tmp = false;
-			break;
-		}
-	}
-
-	EXPECT_EQ(1000, rn.length());
-	EXPECT_EQ(0, rn2.length());
-	EXPECT_TRUE(tmp);
+    EXPECT_EQ(1000, rn.capacity());
+    EXPECT_EQ(0, rn2.getlength());
+    EXPECT_TRUE(tmp);
 }
 //copy and "=="
 TEST(TestCopy, TestCopyRNA) {
-	Nucleotide n = C;
-	const RNA rn1(1000, n);                    //chenged to const operator[] - need to check
-	const RNA rn2(rn1);
-	EXPECT_EQ(rn1.length(), rn2.length());
-	EXPECT_EQ(rn1.capacity(), rn2.capacity());
-	bool tmp = true;
-	bool IsEqual = (rn1 == rn2);
-	for (size_t i = 0; i < rn1.length(); i++) {
-		if (rn1[i] != rn2[i]) {
-			tmp = false;
-			break;
-		}
-	}
-	EXPECT_TRUE(tmp);
-	EXPECT_TRUE(IsEqual);
+    Nucleotid n = C;
+    RNA rn1(1000, n);                    //chenged to const operator[] - need to check
+    RNA rn2(rn1);
+    EXPECT_EQ(rn1.getlength(), rn2.getlength());
+    EXPECT_EQ(rn1.capacity(), rn2.capacity());
+    bool tmp = true;
+    bool IsEqual = (rn1 == rn2);
+    for (size_t i = 0;i<rn1.getlength();i++) {
+        if (Nucleotid (rn1[i]) != Nucleotid (rn2[i])) {
+            tmp = false;
+            break;
+        }
+    }
+    EXPECT_TRUE(tmp);
+    EXPECT_TRUE(IsEqual);
 }
 //operator=
-TEST(TestAssigning, TestOperatorAssigningRNK) {
-	Nucleotide n = C;
-	RNK rn1(1000, n);
-	RNK rn2;
-	rn2 = rn1;
-	EXPECT_EQ(rn1.length(), rn2.length());
-	EXPECT_EQ(rn1.capacity(), rn2.capacity());
-	bool tmp = true;
-	bool IsEqual = (rn1 == rn2);
-	for (
-		size_t i = 0;
-		i < rn1.
-
-		length();
-
-		i++) {
-		if (rn1[i] != rn2[i]) {
-			tmp = false;
-			break;
-		}
-	}
-	EXPECT_TRUE(tmp);
-	EXPECT_TRUE(IsEqual);
+TEST(RNA, TestOperatorAssigningRNK) {
+    Nucleotid n = C;
+    RNA rn1(1000, n);
+    RNA rn2;
+    rn2 = rn1;
+    EXPECT_EQ(rn1.getlength(), rn2.getlength());
+    EXPECT_EQ(rn1.capacity(), rn2.capacity());
+    bool tmp = true;
+    bool IsEqual = (rn1 == rn2);
+        for (size_t i = 0;i<rn1.getlength();i++) {
+            if (Nucleotid (rn1[i]) != Nucleotid (rn2[i])) {
+                tmp = false;
+                break;
+            }
+        }
+    EXPECT_TRUE(tmp);
+    EXPECT_TRUE(IsEqual);
 }
 TEST(TestAssigning, TestAssigningThisToThis) {
-	Nucleotide n = C;
-	RNK rn1(1000, n);
-	RNK rn2(rn1);
-	rn1 = rn1;
-	bool tmp = true;
-	for (
-		size_t i = 0;
-		i < rn1.
-
-		length();
-
-		i++) {
-		if (rn1[i] != rn2[i]) {
-			tmp = false;
-			break;
-		}
-	}
-	EXPECT_TRUE(rn1.length() == rn2.length());
-	EXPECT_TRUE(tmp);
+    Nucleotid n = C;
+    RNA rn1(1000, n);
+    RNA rn2(rn1);
+    rn1 = rn1;
+    bool tmp = true;
+    for (size_t i = 0;i<rn1.getlength();i++) {
+        if (Nucleotid (rn1[i]) != Nucleotid (rn2[i])) {
+            tmp = false;
+            break;
+        }
+    }
+    EXPECT_TRUE(rn1.getlength()== rn2.getlength());
+    EXPECT_TRUE(tmp);
 }
 
-//operator!
-TEST(TestNot, TestNotRnk) {
-	Nucleotide n = C;
-	RNK rn1(1000, n);
-	RNK rn2;
-	rn2 = rn1;
-	EXPECT_EQ(rn1.length(), rn2.length());
-	EXPECT_EQ(rn1.capacity(), rn2.capacity());
-	bool tmp = true;
-	bool IsEqual = (rn1 == rn2);
-	for (
-		size_t i = 0;
-		i < rn1.
 
-		length();
-
-		i++) {
-		if (rn1[i] != rn2[i]) {
-			tmp = false;
-			break;
-		}
-	}
-	EXPECT_TRUE(tmp);
-	EXPECT_TRUE(IsEqual);
-}
 
 //void trim();
 TEST(TrimTest, TestTrimRNK) {
-	RNK rn2(1000, G);
-	rn2.trim(0);
-	EXPECT_EQ(rn2.length(), 0);
-	EXPECT_EQ(rn2.capacity(), 0);
+    RNA rn2(1000, G);
+    rn2=rn2.trim(0);
+    EXPECT_EQ(rn2.getlength(),1);
+    EXPECT_EQ(rn2.capacity(),1);
 }
 
 //run time
 TEST(TestTime, RunTimeSmall) {
-	RNK rn;
-	int size = 10000;
-	//	size_t start = clock();
-	for (
-		int i = 0;
-		i < size;
-		i++) {
-		rn[i] =
-			G;//(Nucleotide)((i*i) % 4);
-	}
-	//	size = 1000000000;
-	//	size_t end = clock();
-	//	std::cout << "runTime: " << end - start << "\n";
-	EXPECT_TRUE(true);
+    RNA rn;
+    int size = 10000;
+//	size_t start = clock();
+    for (int i = 0;i<size;i++) {
+        rn[i] =G;//(Nucleotide)((i*i) % 4);
+    }
+//	size = 1000000000;
+//	size_t end = clock();
+//	std::cout << "runTime: " << end - start << "\n";
+    EXPECT_TRUE(true);
 }
 //run time with 100000000
 TEST(TestTime, RunTimeBig) {
-	RNK rn;
-	int size = 100000000;
-	//	size_t start = clock();
-	for (
-		int i = 0;
-		i < size;
-		i++) {
-		//		rn[i] = G;//(Nucleotide)((i*i) % 4);
-	}
-	EXPECT_TRUE(true);
+    RNA rn;
+    int size = 100000000;
+//	size_t start = clock();
+    for (int i = 0;i<size;i++) {
+//		rn[i] = G;//(Nucleotide)((i*i) % 4);
+}
+    EXPECT_TRUE(true);
 }
 
 TEST(TestOperatorSum, TestCorrect) {
-	size_t size1 = 1000;
-	size_t size2 = 1000;
-	Nucleotide n1 = C;
-	Nucleotide n2 = G;
+    size_t size1 = 1000;
+    size_t size2 = 1000;
+    Nucleotid n1 = C;
+    Nucleotid n2 = G;
 
-	RNK rn1(size1, n1);
-	RNK rn2(size2, n2);
-	const RNK rn3 = rn1 + rn2;
-	bool isEqual = true;
-	for (
-		size_t i = 0;
-		i < size1;
-		i++) {
-		if (rn3[i] != n1) {
-			isEqual = false;
-			break;
-		}
-	}
-	if (isEqual == true) {
-		for (
-			size_t i = size1;
-			i < rn3.
+    RNA rna1(1000, C);
 
-			length();
+    RNA rna2(1000, n2);
 
-			i++) {
-			if (rn3[i] != n2) {
-				isEqual = false;
-				break;
-			}
-		}
-	}
+    RNA rna3 = rna1 + rna2;
 
-	EXPECT_TRUE(isEqual);
+    bool isEqual = true;
+    for (size_t i = 0;i<size1;i++) {
+        if (Nucleotid (rna3[i]) != n1) {
+            isEqual = false;
+            break;
+        }
+    }
+    if (isEqual) {
+        for (size_t i = size1;i<size1+size2;i++) {
+            if (Nucleotid (rna3[i]) != n2) {
+                isEqual = false;
+                break;
+            }
+         }
+    }
+    EXPECT_TRUE(isEqual);
 }
 TEST(TestOperatorSum, TestBoundaryCauseSizeOf) {
-	size_t size1 = sizeof(size_t);
-	size_t size2 = 3 * sizeof(size_t);
-	Nucleotide n1 = C;
-	Nucleotide n2 = G;
-
-	RNK rn1(size1, n1);
-	RNK rn2(size2, n2);
-	const RNK rn3 = rn1 + rn2;
-	bool isEqual = true;
-	for (
-		size_t i = 0;
-		i < size1;
-		i++) {
-		if (rn3[i] != n1) {
-			isEqual = false;
-			break;
-		}
-	}
-	if (isEqual == true) {
-		for (
-			size_t i = size1;
-			i < rn3.
-
-			length();
-
-			i++) {
-			if (rn3[i] != n2) {
-				isEqual = false;
-				break;
-			}
-		}
-	}
-	EXPECT_TRUE(isEqual);
+    size_t size1 = sizeof(size_t);
+    size_t size2 = 3 * sizeof(size_t);
+    Nucleotid n1 = C;
+    Nucleotid n2 = G;
+    RNA rn1(size1, n1);
+    RNA rn2(size2, n2);
+    RNA rn3 = rn1 + rn2;
+    bool isEqual = true;
+    for (size_t i = 0;i<size1;i++) {
+        if (Nucleotid (rn3[i]) != n1) {
+            isEqual = false;
+            break;
+        }
+    }
+    if (isEqual == true) {
+        for (size_t i = size1;i<rn3.getlength();i++) {
+            if (Nucleotid (rn3[i]) != n2) {
+                isEqual = false;
+                break;
+            }
+        }
+    }
+    EXPECT_TRUE(isEqual);
 }
 TEST(TestOperatorSum, TestBoundaryCauseSizeOfMinusOne) {
-	size_t size1 = (2 * sizeof(size_t)) - 1;
-	size_t size2 = 3 * sizeof(size_t);
-	Nucleotide n1 = C;
-	Nucleotide n2 = G;
-
-	RNK rn1(size1, n1);
-	RNK rn2(size2, n2);
-	const RNK rn3 = rn1 + rn2;
-	bool isEqual = true;
-	for (
-		size_t i = 0;
-		i < size1;
-		i++) {
-		if (rn3[i] != n1) {
-			isEqual = false;
-			break;
-		}
-	}
-	if (isEqual == true) {
-		for (
-			size_t i = size1;
-			i < rn3.
-
-			length();
-
-			i++) {
-			if (rn3[i] != n2) {
-				isEqual = false;
-				break;
-			}
-		}
-	}
-	EXPECT_TRUE(isEqual);
+    size_t size1 = (2 * sizeof(size_t)) - 1;
+    size_t size2 = 3 * sizeof(size_t);
+    Nucleotid n1 = C;
+    Nucleotid n2 = G;
+    RNA rn1(size1, n1);
+    RNA rn2(size2, n2);
+    RNA rn3 = rn1 + rn2;
+    bool isEqual = true;
+    for (size_t i = 0;i<size1;i++) {
+        if (Nucleotid (rn3[i]) != n1) {
+            isEqual = false;
+            break;
+        }
+    }
+    if (isEqual) {
+        for (size_t i = size1;i<rn3.getlength();i++) {
+            if (Nucleotid (rn3[i]) != n2) {
+                isEqual = false;
+                break;
+            }
+        }
+    }
+EXPECT_TRUE(isEqual);
 }
 //operator!=
-TEST(TestNotEqual, TestNotEqualRnk) {
-	Nucleotide n = C;
-	Nucleotide N = G;
-	RNK rn1(1000, n);
-	RNK rn2(1000, N);
-	RNK rn3;
-	//	rn2 = rn1;
-	//	!rn1;
-	//	EXPECT_FALSE(rn1.length() == rn2.length());
-	//	EXPECT_EQ(rn1.capacity(), rn2.capacity());
-	bool IsEqual = (rn1 == rn2);
-	EXPECT_FALSE(IsEqual);
-	IsEqual = (rn1 == rn3);
-	EXPECT_FALSE(IsEqual);
-	IsEqual = (rn2 == rn3);
-	EXPECT_FALSE(IsEqual);
-}
 
 TEST(TestIsCompl, TestIsComplRnk) {
-	size_t size = 10000;
-	Nucleotide n = C;
-	RNK rn1(size, n);
-	RNK rn2 = rn1;
-	!
-		rn1;
-	EXPECT_TRUE(rn1.isComplementary(rn2));
+    size_t size = 10000;
+    Nucleotid n = C;
+    RNA rn1(size, n);
+    RNA rn2 = rn1;
+    EXPECT_FALSE(rn1.isComplementary(rn2));
 }
 
 TEST(TestSplit, TestSplitRunTime) {
-	size_t size = 10000;// 000;
-	size_t splitNum = 100;//00;
-	Nucleotide n = C;
-	RNK rn1(size, n);
-	const RNK rn2 = rn1.split(splitNum);
-	!
-		rn1;
-	size_t tmpSize = rn1.length();
-	bool tmp = true;
-	for (
-		size_t i = 0;
-		i < tmpSize;
-		i++) {
-		if (((Nucleotide)rn1[i]) != G) {
-			tmp = false;
-			break;
-		}
-		if (rn2[i + tmpSize] != C) {
-			tmp = false;
-			break;
-		}
-	}
-	EXPECT_TRUE(tmp);
+    size_t size = 99;// 000;
+    size_t splitNum = 2;//00;
+    Nucleotid n = C;
+    RNA rn1(size, n);
+
+    RNA rn2 = rn1.split(splitNum);
+
+    size_t tmpSize = rn1.getlength();
+    bool tmp = true;
+    for (size_t i = 0;i<splitNum;i++) {
+        if (((Nucleotid) rn1[i]) != n) {
+            tmp = false;
+            break;
+        }
+    }
+    for (size_t j = 0; j < size-splitNum; ++j) {
+        if (Nucleotid (rn2[j]) != n) {
+            tmp = false;
+            break;
+        }
+    }
+
+
+    EXPECT_TRUE(tmp);
 }
 //
 // Created by Юлия Затолоцкая on 17.11.2019.
+////
+// Created by juliyazatolockaya on 18.11.2019.
 //
 
