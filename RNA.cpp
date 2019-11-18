@@ -47,11 +47,7 @@ size_t RNA::reference:: change_block(size_t index_of_block, Nucleotid n, size_t 
     return block;
 }
 
-static void out(size_t n) {
-    for (int i = sizeof(size_t) * 8 - 1; i > 0; --i) // short 16 бит (00000000 00000000)
-        cout << (n >> i & 1); // проходимся по битам и выводим через пробел
-    cout << (n & 1) << " \n";
-}
+
 
 RNA::reference & RNA::reference::operator=(Nucleotid nucl) {//reference
     size_t index_of_last_old_nucl_in_block = (rna->NuclNum - 1) % (sizeof(size_t) * 4);
@@ -139,6 +135,18 @@ RNA::reference:: operator Nucleotid() {
 
 }
 
+void RNA::reference::out(size_t n) {
+        for (int i = sizeof(size_t) * 8 - 1; i > 0; --i) // short 16 бит (00000000 00000000)
+            cout << (n >> i & 1); // проходимся по битам и выводим через пробел
+        cout << (n & 1) << " \n";
+    }
+
+size_t RNA::reference::get_mask(size_t index) {
+    size_t mask = T;
+    size_t shift = 2 * (sizeof(size_t) * 4 - index - 1);
+    mask = mask << shift;
+    return mask;
+}
 
 
 RNA::reference RNA::operator[](size_t ind) {
@@ -354,6 +362,15 @@ unordered_map<Nucleotid, size_t, hash<size_t> > RNA:: cardinality() {
     }
     return returnNums;
 }
+
+size_t RNA::getlength() const {
+    return this->length;
+}
+size_t RNA::capacity() const {
+    return this->NuclNum;
+}
+
+
 
 
 
